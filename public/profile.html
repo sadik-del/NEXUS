@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NEXUS | Profile</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .profile-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .profile-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .profile-cover {
+            height: 180px;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(59,130,246,.35), transparent 35%),
+                radial-gradient(circle at 80% 70%, rgba(6,182,212,.3), transparent 35%),
+                #111827;
+        }
+
+        .profile-main {
+            padding: 0 30px 30px;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            margin-top: -55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            border: 5px solid var(--surface);
+
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+
+            color: white;
+            font-size: 38px;
+            font-weight: 700;
+        }
+
+        .profile-name {
+            margin-top: 18px;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .profile-username {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .profile-bio {
+            margin-top: 18px;
+            max-width: 650px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .profile-btn {
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            padding: 10px 18px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .profile-btn:hover {
+            background: rgba(255,255,255,.08);
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 25px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .stat span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .profile-section {
+            margin-top: 22px;
+            padding: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+        }
+
+        .profile-section h2 {
+            margin: 0 0 18px;
+            color: var(--text);
+            font-size: 18px;
+        }
+
+        .empty-profile {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .profile-page {
+                padding: 25px 15px;
+            }
+
+            .profile-main {
+                padding: 0 20px 25px;
+            }
+
+            .profile-cover {
+                height: 140px;
+            }
+
+            .profile-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ==========================================
+        PROFILE EDIT MODAL
+        ========================================== */
+
+        .profile-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+        }
+
+        .profile-modal.active {
+            display: flex;
+        }
+
+        .profile-modal-box {
+            width: 100%;
+            max-width: 480px;
+
+            padding: 25px;
+
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .profile-modal-header h2 {
+            margin: 0;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        #editProfileForm label {
+            display: block;
+
+            margin: 15px 0 7px;
+
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        #editProfileForm input,
+        #editProfileForm textarea {
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 11px 12px;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
+
+            outline: none;
+
+            font-family: inherit;
+        }
+
+        #editProfileForm textarea {
+            resize: vertical;
+        }
+
+        #editProfileForm input:focus,
+        #editProfileForm textarea:focus {
+            border-color: #3b82f6;
+        }
+
+        .save-profile-btn {
+            width: 100%;
+
+            margin-top: 22px;
+
+            padding: 12px;
+
+            border: none;
+            border-radius: 9px;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #06b6d4
+            );
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .profile-update-message {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* ==========================================
+        AVATAR UPLOAD
+        ========================================== */
+
+        .profile-avatar-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin-top: -55px;
+        }
+
+        .profile-avatar-wrapper .profile-avatar {
+            margin-top: 0;
+            width: 110px;
+            height: 110px;
+        }
+
+        .avatar-upload-btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+
+            width: 34px;
+            height: 34px;
+
+            border: 3px solid var(--surface);
+            border-radius: 50%;
+
+            background: #3b82f6;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .avatar-upload-btn:hover {
+            transform: scale(1.08);
+        }
+
+        /* ==============================
+        PROFILE PROJECT CARDS
+        ============================== */
+
+        .profile-projects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .profile-project-card {
+            background: #0b1220;
+            border: 1px solid #1e293b;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            transition: 0.2s ease;
+        }
+
+        .profile-project-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .profile-project-card h3 {
+            margin: 0 0 7px;
+            font-size: 17px;
+            color: #f8fafc;
+        }
+
+        .profile-project-card p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .project-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+
+        /* Mobile */
+        @media (max-width: 700px) {
+
+            .profile-projects {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        .profile-project-info {
+            width: 100%;
+        }
+
+        .profile-project-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .profile-project-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .profile-project-card {
+            cursor: pointer;
+        }
+
+        .profile-project-card:active {
+            transform: translateY(0);
+        }
+
+        /* ==============================
+        PROFILE RECENT ACTIVITY
+        ============================== */
+
+        .profile-activity {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            padding: 14px 16px;
+
+            background: #0b1220;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+
+            transition: 0.2s ease;
+        }
+
+        .activity-item:hover {
+            border-color: #3b82f6;
+            transform: translateX(2px);
+        }
+
+        .activity-icon {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: rgba(59, 130, 246, 0.12);
+
+            font-size: 17px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .activity-context {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .activity-time {
+            color: #64748b;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="profile-page">
+
+        <!-- PROFILE CARD -->
+        <section class="profile-card">
+
+            <div class="profile-cover"></div>
+
+            <div class="profile-main">
+
+                <div class="profile-avatar-wrapper">
+
+                    <div class="profile-avatar" id="profileAvatar">
+                        N
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avatar-upload-btn"
+                        id="avatarUploadBtn"
+                        title="Change profile photo"
+                    >
+                        📷
+                    </button>
+
+                    <input
+                        type="file"
+                        id="avatarInput"
+                        accept="image/jpeg,image/png,image/webp"
+                        hidden
+                    >
+
+                </div>
+
+                <div class="profile-name" id="profileName">
+                    NEXUS User
+                </div>
+
+                <div class="profile-username" id="profileUsername">
+                    @username
+                </div>
+
+                <div class="profile-bio" id="profileBio">
+                    NEXUS community member.
+                </div>
+
+                <div class="profile-actions">
+
+                    <button
+                    class="profile-btn"
+                    id="editProfileBtn"
+                >
+                    ✏️ Edit Profile
+                </button>
+
+                <div id="editProfileModal" class="profile-modal">
+
+                    <div class="profile-modal-box">
+
+                        <div class="profile-modal-header">
+                            <h2>Edit Profile</h2>
+
+                            <button
+                                type="button"
+                                id="closeProfileModal"
+                                class="modal-close"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <form id="editProfileForm">
+
+                            <label>Name</label>
+
+                            <input
+                                type="text"
+                                id="editName"
+                                required
+                            >
+
+                            <label>Bio</label>
+
+                            <textarea
+                                id="editBio"
+                                rows="4"
+                                placeholder="Tell the NEXUS community about yourself..."
+                            ></textarea>
+
+                            <button
+                                type="submit"
+                                class="save-profile-btn"
+                            >
+                                Save Changes
+                            </button>
+
+                            <div
+                                id="profileUpdateMessage"
+                                class="profile-update-message"
+                            ></div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                    <button
+                        class="profile-btn"
+                        id="backBtn"
+                    >
+                        ← Back
+                    </button>
+
+                </div>
+
+                <div class="profile-stats">
+
+                    <div class="stat">
+                        <strong id="postCount">0</strong>
+                        <span>Posts</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong id="projectCount">0</strong>
+                        <span>Projects</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong id="communityCount">0</strong>
+                        <span>Communities</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACTIVITY -->
+        <section class="profile-section">
+
+            <h2>Recent Activity</h2>
+
+            <div id="profileActivity" class="profile-activity">
+                <div class="empty-profile">
+                    Loading activity...
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- PROJECTS -->
+        <section class="profile-section">
+
+            <h2>Projects</h2>
+
+            <div id="profileProjects" class="profile-projects">
+
+                <div class="empty-profile">
+                    Loading projects...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        // ==========================================
+        // LOAD PROFILE FROM API
+        // ==========================================
+
+        async function loadProfile() {
+
+            const token =
+                localStorage.getItem("nexusToken");
+
+            if (!token) {
+                window.location.href = "/auth.html";
+                return;
+            }
+
+            try {
+
+                
+                const params = new URLSearchParams(window.location.search);
+                const requestedUserId = params.get("userId");
+
+                const currentUser = JSON.parse(
+                    localStorage.getItem("nexusUser") || "null"
+                );
+
+                const isOwnProfile =
+                    !requestedUserId ||
+                    (currentUser &&
+                        String(currentUser.id) === String(requestedUserId));
+
+                const profileEndpoint = isOwnProfile
+                    ? "/api/auth/profile"
+                    : `/api/auth/users/${encodeURIComponent(requestedUserId)}/profile`;
+
+                const response = await fetch(profileEndpoint, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    console.error(
+                        "Profile loading failed:",
+                        data.message
+                    );
+
+                    return;
+                }
+
+                const user = data.user;
+                const stats = data.stats || {};
+
+                const activities = data.activities || [];
+
+                const activityContainer =
+                    document.getElementById("profileActivity");
+
+                if (activities.length === 0) {
+
+                    activityContainer.innerHTML = `
+                        <div class="empty-profile">
+                            No recent activity yet.
+                        </div>
+                    `;
+
+                } else {
+
+                    activityContainer.innerHTML = activities.map(activity => {
+
+                        let icon = "🔹";
+
+                        if (activity.type === "project_created") {
+                            icon = "🚀";
+                        } else if (activity.type === "project_joined") {
+                            icon = "📁";
+                        } else if (activity.type === "community_created") {
+                            icon = "👥";
+                        } else if (activity.type === "community_joined") {
+                            icon = "🤝";
+                        } else if (activity.type === "post") {
+                            icon = "📝";
+                        }
+
+                        const activityDate =
+                            new Date(activity.activity_time);
+
+                        const formattedDate =
+                            activityDate.toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric"
+                            });
+
+                        return `
+                            <div
+                                class="activity-item"
+                                onclick="handleActivityClick('${activity.type}', ${activity.related_id})"
+                                style="cursor:pointer;"
+                            >
+
+                                <div class="activity-icon">
+                                    ${icon}
+                                </div>
+
+                                <div class="activity-content">
+
+                                    <div class="activity-title">
+                                        ${activity.title}
+                                    </div>
+
+                                    <div class="activity-context">
+                                        ${activity.context}
+                                    </div>
+
+                                </div>
+
+                                <div class="activity-time">
+                                    ${formattedDate}
+                                </div>
+
+                            </div>
+                        `;
+
+                    }).join("");
+                }
+
+                // Load user's projects
+                const projects = data.projects || [];
+                const projectsContainer = document.getElementById("profileProjects");
+
+                if (projects.length === 0) {
+
+                    projectsContainer.innerHTML = `
+                        <div class="empty-profile">
+                            No projects to display yet.
+                        </div>
+                    `;
+
+                } else {
+
+                    projectsContainer.innerHTML = projects.map(project => `
+                        <div
+                            class="profile-project-card"
+                            onclick="window.location.href='/projects.html?projectId=${project.id}'"
+                            style="cursor: pointer;"
+                        >
+
+                            <div class="profile-project-info">
+
+                                <div class="profile-project-title-row">
+
+                                    <h3>${project.name}</h3>
+
+                                    <span class="project-status">
+                                        ${project.status || "active"}
+                                    </span>
+
+                                </div>
+
+                                <p>
+                                    ${project.description || "No description available."}
+                                </p>
+
+                                <div class="profile-project-meta">
+
+                                    <span>
+                                        👥 ${project.member_count || 0}
+                                        ${project.member_count === 1 ? "member" : "members"}
+                                    </span>
+
+                                    <span>
+                                        👤 ${project.owner_name || project.owner_username || "Unknown"}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    `).join("");
+
+                }
+
+                document.getElementById("postCount").textContent = stats.posts ?? 0;
+                document.getElementById("projectCount").textContent = stats.projects ?? 0;
+                document.getElementById("communityCount").textContent = stats.communities ?? 0;
+
+                // Name
+                document.getElementById(
+                    "profileName"
+                ).textContent =
+                    user.name || "NEXUS User";
+
+                // Username
+                document.getElementById(
+                    "profileUsername"
+                ).textContent =
+                    `@${user.username || "user"}`;
+
+                // Bio
+                document.getElementById(
+                    "profileBio"
+                ).textContent =
+                    user.bio ||
+                    "NEXUS community member.";
+
+                // Avatar
+                const avatar =
+                    document.getElementById(
+                        "profileAvatar"
+                    );
+
+                if (user.avatar_url) {
+
+                    avatar.innerHTML = `
+                        <img
+                            src="${user.avatar_url}"
+                            alt="${user.name}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                                border-radius:50%;
+                            "
+                        >
+                    `;
+
+                } else {
+
+                    avatar.textContent =
+                        (user.name || "N")
+                        .charAt(0)
+                        .toUpperCase();
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Profile error:",
+                    error
+                );
+
+            }
+        }
+
+
+        // Load profile
+        loadProfile();
+
+
+        // ==========================================
+        // BACK BUTTON
+        // ==========================================
+
+        document.getElementById(
+            "backBtn"
+        ).addEventListener(
+            "click",
+            () => {
+
+                window.history.back();
+
+            }
+        );
+
+
+        // ==========================================
+        // EDIT PROFILE
+        // ==========================================
+
+        const editProfileBtn =
+            document.getElementById("editProfileBtn");
+
+        const editProfileModal =
+            document.getElementById("editProfileModal");
+
+        const closeProfileModal =
+            document.getElementById("closeProfileModal");
+
+        const editProfileForm =
+            document.getElementById("editProfileForm");
+
+        const editName =
+            document.getElementById("editName");
+
+        const editBio =
+            document.getElementById("editBio");
+
+        const profileUpdateMessage =
+            document.getElementById("profileUpdateMessage");
+
+
+        // Open modal
+        editProfileBtn.addEventListener("click", async () => {
+
+            const token =
+                localStorage.getItem("nexusToken");
+
+            if (!token) return;
+
+            try {
+
+                const response = await fetch(
+                    "/api/auth/profile",
+                    {
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data =
+                    await response.json();
+
+                if (!data.success) return;
+
+                editName.value =
+                    data.user.name || "";
+
+                editBio.value =
+                    data.user.bio || "";
+
+                profileUpdateMessage.textContent = "";
+
+                editProfileModal.classList.add("active");
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to open edit profile:",
+                    error
+                );
+
+            }
+
+        });
+
+
+        // Close modal
+        closeProfileModal.addEventListener(
+            "click",
+            () => {
+
+                editProfileModal.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        // Close when clicking outside
+        editProfileModal.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    event.target ===
+                    editProfileModal
+                ) {
+
+                    editProfileModal.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+
+        // Save profile
+        editProfileForm.addEventListener(
+            "submit",
+            async (event) => {
+
+                event.preventDefault();
+
+                const token =
+                    localStorage.getItem("nexusToken");
+
+                const name =
+                    editName.value.trim();
+
+                const bio =
+                    editBio.value.trim();
+
+                if (!name) {
+
+                    profileUpdateMessage.textContent =
+                        "Name is required.";
+
+                    return;
+
+                }
+
+                try {
+
+                    const response = await fetch(
+                        "/api/auth/profile",
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                Authorization:
+                                    `Bearer ${token}`
+                            },
+
+                            body: JSON.stringify({
+                                name,
+                                bio
+                            })
+                        }
+                    );
+
+                    const data =
+                        await response.json();
+
+                    if (!response.ok || !data.success) {
+
+                        profileUpdateMessage.textContent =
+                            data.message ||
+                            "Unable to update profile.";
+
+                        return;
+
+                    }
+
+                    // Update page immediately
+                    document.getElementById(
+                        "profileName"
+                    ).textContent =
+                        data.user.name;
+
+                    document.getElementById(
+                        "profileUsername"
+                    ).textContent =
+                        `@${data.user.username}`;
+
+                    document.getElementById(
+                        "profileBio"
+                    ).textContent =
+                        data.user.bio ||
+                        "NEXUS community member.";
+
+                    document.getElementById(
+                        "profileAvatar"
+                    ).textContent =
+                        data.user.name
+                            .charAt(0)
+                            .toUpperCase();
+
+                    profileUpdateMessage.textContent =
+                        "Profile updated successfully.";
+
+                    // Keep localStorage user data updated
+                    localStorage.setItem(
+                        "nexusUser",
+                        JSON.stringify(data.user)
+                    );
+
+                    setTimeout(() => {
+
+                        editProfileModal.classList.remove(
+                            "active"
+                        );
+
+                    }, 700);
+
+                } catch (error) {
+
+                    console.error(
+                        "Profile update error:",
+                        error
+                    );
+
+                    profileUpdateMessage.textContent =
+                        "Something went wrong.";
+                }
+
+            }
+        );
+
+        // ==========================================
+        // AVATAR UPLOAD
+        // ==========================================
+
+        const avatarUploadBtn =
+            document.getElementById("avatarUploadBtn");
+
+        const avatarInput =
+            document.getElementById("avatarInput");
+
+
+        // Open file picker
+        avatarUploadBtn.addEventListener(
+            "click",
+            () => {
+                avatarInput.click();
+            }
+        );
+
+
+        // When image is selected
+        avatarInput.addEventListener(
+            "change",
+            async () => {
+
+                const file =
+                    avatarInput.files[0];
+
+                if (!file) return;
+
+
+                // Basic validation
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+
+                    alert(
+                        "Please select a JPG, PNG or WebP image."
+                    );
+
+                    avatarInput.value = "";
+                    return;
+                }
+
+
+                // 5 MB limit
+                if (file.size > 5 * 1024 * 1024) {
+
+                    alert(
+                        "Image must be smaller than 5 MB."
+                    );
+
+                    avatarInput.value = "";
+                    return;
+                }
+
+
+                const token =
+                    localStorage.getItem("nexusToken");
+
+                if (!token) {
+                    window.location.href = "/auth.html";
+                    return;
+                }
+
+
+                const formData =
+                    new FormData();
+
+                formData.append(
+                    "avatar",
+                    file
+                );
+
+
+                try {
+
+                    avatarUploadBtn.disabled = true;
+
+                    avatarUploadBtn.textContent = "⏳";
+
+
+                    const response =
+                        await fetch(
+                            "/api/auth/profile/avatar",
+                            {
+                                method: "PUT",
+
+                                headers: {
+                                    Authorization:
+                                        `Bearer ${token}`
+                                },
+
+                                body: formData
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok || !data.success) {
+
+                        alert(
+                            data.message ||
+                            "Unable to upload image."
+                        );
+
+                        return;
+                    }
+
+
+                    // Update avatar immediately
+                    const avatar =
+                        document.getElementById(
+                            "profileAvatar"
+                        );
+
+                    avatar.innerHTML = `
+                        <img
+                            src="${data.user.avatar_url}?t=${Date.now()}"
+                            alt="${data.user.name}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                                border-radius:50%;
+                            "
+                        >
+                    `;
+
+
+                    // Update stored user
+                    localStorage.setItem(
+                        "nexusUser",
+                        JSON.stringify(
+                            data.user
+                        )
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Avatar upload error:",
+                        error
+                    );
+
+                    alert(
+                        "Something went wrong while uploading."
+                    );
+
+                } finally {
+
+                    avatarUploadBtn.disabled = false;
+
+                    avatarUploadBtn.textContent = "📷";
+
+                    avatarInput.value = "";
+
+                }
+
+            }
+        );
+
+        function handleActivityClick(type, relatedId) {
+            if (!relatedId) return;
+
+            if (
+                type === "project_created" ||
+                type === "project_joined"
+            ) {
+                window.location.href =
+                    `/projects.html?projectId=${encodeURIComponent(relatedId)}`;
+                return;
+            }
+
+            if (
+                type === "community_created" ||
+                type === "community_joined"
+            ) {
+                window.location.href =
+                    `/communities.html?communityId=${encodeURIComponent(relatedId)}`;
+                return;
+            }
+
+            if (type === "post") {
+                window.location.href = "/feed.html";
+            }
+        }
+
+    </script>
+
+</body>
+</html>

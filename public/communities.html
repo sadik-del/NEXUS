@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NEXUS | Communities</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/communities.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     SIDEBAR
+============================== -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-logo">
+            N
+        </div>
+
+        <div>
+            <strong>NEXUS</strong>
+            <span>Community Platform</span>
+        </div>
+
+    </div>
+
+
+    
+    <nav class="sidebar-nav">
+
+        <a href="/" class="nav-link">
+            <span>⌂</span>
+            Dashboard
+        </a>
+
+        <a href="/communities.html" class="nav-link active">
+            <span>◉</span>
+            Communities
+        </a>
+
+        <a href="/projects.html" class="nav-link">
+            <span>▣</span>
+            Projects &amp; Tasks
+        </a>
+
+        <a href="/chat.html" class="nav-link">
+            <span>▤</span>
+            Messages
+        </a>
+
+        <a href="/notifications.html" class="nav-link">
+            <span>♢</span>
+            Notifications
+        </a>
+
+        <a href="/profile.html" class="nav-link">
+            <span>◈</span>
+            My Profile
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-user">
+
+            <div
+                class="avatar"
+                id="sidebarAvatar"
+            >
+                U
+            </div>
+
+            <div>
+
+                <strong id="sidebarName">
+                    User
+                </strong>
+
+                <span>
+                    Online
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ==============================
+     MAIN
+============================== -->
+
+<main class="main-content">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <div class="page-title">
+
+                <span>Communities</span>
+
+                <small>
+                    Discover people and ideas
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <div class="top-search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    id="topSearch"
+                    placeholder="Search communities..."
+                >
+
+            </div>
+
+
+            <div
+                class="top-avatar"
+                id="topAvatar"
+            >
+                U
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- PAGE CONTENT -->
+
+    <section class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="communities-heading">
+
+            <div>
+
+                <h1>
+                    Explore Communities
+                </h1>
+
+                <p>
+                    Find communities that match your interests
+                    and collaborate with other members.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                id="createCommunityBtn"
+            >
+                + Create Community
+            </button>
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <div class="community-toolbar">
+
+            <div class="community-search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    id="communitySearch"
+                    placeholder="Search by name, category or description..."
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COMMUNITY LIST -->
+
+        <div class="communities-container" id="communitiesContainer">
+
+            <div class="community-status">
+                <h3>Loading communities...</h3>
+            </div>
+
+        </div>
+
+        <!-- COMMUNITY DETAIL VIEW -->
+        <div
+            id="communityDetailView"
+            class="community-detail"
+        >
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- ==============================
+     CREATE COMMUNITY MODAL
+============================== -->
+
+<div
+    class="modal-overlay"
+    id="createCommunityModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Create Community
+                </h2>
+
+                <p>
+                    Build a space around an idea,
+                    interest or project.
+                </p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeCommunityModal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <form id="createCommunityForm">
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="communityName">
+                    Community Name
+                </label>
+
+                <input
+                    type="text"
+                    id="communityName"
+                    placeholder="e.g. Web Developers"
+                    maxlength="100"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="communityDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="communityDescription"
+                    placeholder="What is this community about?"
+                    maxlength="500"
+                    rows="4"
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="communityCategory">
+                    Category
+                </label>
+
+                <select
+                    id="communityCategory"
+                >
+
+                    <option value="Technology">
+                        Technology
+                    </option>
+
+                    <option value="Education">
+                        Education
+                    </option>
+
+                    <option value="Design">
+                        Design
+                    </option>
+
+                    <option value="Business">
+                        Business
+                    </option>
+
+                    <option value="Gaming">
+                        Gaming
+                    </option>
+
+                    <option value="Programming">
+                        Programming
+                    </option>
+
+                    <option value="Projects">
+                        Projects
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- ICON -->
+
+            <div class="form-group">
+
+                <label for="communityIcon">
+                    Community Icon
+                </label>
+
+                <div class="icon-input">
+
+                    <input
+                        type="text"
+                        id="communityIcon"
+                        placeholder="Choose an emoji"
+                        maxlength="5"
+                    >
+
+                    <div class="icon-suggestions">
+
+                        <button
+                            type="button"
+                            data-icon="💻"
+                        >
+                            💻
+                        </button>
+
+                        <button
+                            type="button"
+                            data-icon="🚀"
+                        >
+                            🚀
+                        </button>
+
+                        <button
+                            type="button"
+                            data-icon="🎨"
+                        >
+                            🎨
+                        </button>
+
+                        <button
+                            type="button"
+                            data-icon="📚"
+                        >
+                            📚
+                        </button>
+
+                        <button
+                            type="button"
+                            data-icon="🎮"
+                        >
+                            🎮
+                        </button>
+
+                        <button
+                            type="button"
+                            data-icon="💡"
+                        >
+                            💡
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+
+            <div
+                class="form-message"
+                id="createCommunityMessage"
+            ></div>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    id="cancelCommunityBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                    id="submitCommunityBtn"
+                >
+                    Create Community
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<script src="/js/communities.js"></script>
+
+</body>
+
+</html>

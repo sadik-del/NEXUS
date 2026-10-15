@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Projects</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #0b1120;
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            border-right: 1px solid #1f2937;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #60a5fa;
+            padding: 0 12px 30px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #9ca3af;
+            padding: 13px 14px;
+            border-radius: 10px;
+            transition: .2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #1e293b;
+            color: #fff;
+        }
+
+        .user-box {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+            padding: 12px;
+            background: #172033;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-info {
+            overflow: hidden;
+        }
+
+        .user-info strong {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-info span {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .topbar p {
+            color: #94a3b8;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* PROJECT LIST */
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .project-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .project-card:hover {
+            border-color: #334155;
+            transform: translateY(-2px);
+        }
+
+        .project-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .project-card p {
+            color: #94a3b8;
+            line-height: 1.5;
+            min-height: 45px;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 18px 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .project-actions button {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            background: #1e293b;
+        }
+
+        .project-actions .open-btn {
+            background: #2563eb;
+        }
+
+        .project-actions .delete-btn {
+            background: #7f1d1d;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 70px 20px;
+            color: #64748b;
+            background: #111827;
+            border: 1px dashed #334155;
+            border-radius: 16px;
+        }
+
+        /* WORKSPACE */
+
+        #workspace {
+            display: none;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            border: 1px solid #334155;
+            background: #111827;
+            color: #e5e7eb;
+            padding: 10px 15px;
+            border-radius: 9px;
+        }
+
+        .workspace-title h2 {
+            margin-bottom: 5px;
+        }
+
+        .workspace-title p {
+            color: #64748b;
+        }
+
+        .kanban {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .column {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 15px;
+            padding: 15px;
+            min-height: 400px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .column-header h3 {
+            font-size: 15px;
+        }
+
+        .count {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-card {
+            background: #172033;
+            border: 1px solid #263449;
+            border-radius: 11px;
+            padding: 14px;
+        }
+
+        .task-card h4 {
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .task-card p {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .priority {
+            font-size: 11px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            background: #334155;
+        }
+
+        .task-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .task-buttons button {
+            border: none;
+            background: #243147;
+            color: #cbd5e1;
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 11px;
+        }
+
+        .add-task-btn {
+            width: 100%;
+            border: 1px dashed #334155;
+            background: transparent;
+            color: #64748b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .add-task-btn:hover {
+            color: #fff;
+            border-color: #475569;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 500px;
+            background: #111827;
+            border: 1px solid #293548;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .modal-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border: 1px solid #334155;
+            background: #0b1120;
+            color: white;
+            border-radius: 9px;
+            padding: 11px;
+            outline: none;
+        }
+
+        .field textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .secondary-btn {
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 9px;
+        }
+
+        .message {
+            font-size: 13px;
+            margin-top: 10px;
+            color: #f87171;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 25px;
+            }
+
+            .kanban {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .workspace-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">NEXUS</div>
+
+        <nav class="nav">
+            <a href="/">Dashboard</a>
+            <a href="/feed.html">Community Feed</a>
+            <a href="/communities.html">Communities</a>
+            <a href="/projects.html" class="active">Projects</a>
+        </nav>
+
+        <div class="user-box">
+            <div class="avatar" id="userAvatar">U</div>
+
+            <div class="user-info">
+                <strong id="userName">User</strong>
+                <span id="userUsername">@user</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <!-- PROJECT LIST -->
+
+        <section id="projectsSection">
+
+            <div class="topbar">
+
+                <div>
+                    <h1>Projects</h1>
+                    <p>Build, collaborate and manage your projects.</p>
+                </div>
+
+                <button
+                    class="primary-btn"
+                    id="createProjectBtn">
+                    + Create Project
+                </button>
+
+            </div>
+
+            <div
+                class="projects-grid"
+                id="projectsGrid">
+
+                <div class="empty">
+                    Loading projects...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT WORKSPACE -->
+
+        <section id="workspace">
+
+            <div class="workspace-header">
+
+                <div class="workspace-title">
+                    <h2 id="workspaceTitle">Project</h2>
+                    <p id="workspaceDescription">
+                        Project workspace
+                    </p>
+                </div>
+
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+
+                    <button
+                        class="back-btn"
+                        id="openProjectChat">
+                        💬 Open Chat
+                    </button>
+
+                    <button
+                        class="back-btn"
+                        id="backToProjects">
+                        ← Back to Projects
+                    </button>
+
+                 </div>
+
+            </div>
+
+
+            <div class="kanban">
+
+                <!-- TODO -->
+
+                <div class="column">
+
+                    <div class="column-header">
+                        <h3>📋 To Do</h3>
+                        <span
+                            class="count"
+                            id="todoCount">
+                            0
+                        </span>
+                    </div>
+
+                    <div
+                        class="tasks"
+                        id="todoTasks">
+                    </div>
+
+                    <button
+                        class="add-task-btn"
+                        data-status="todo">
+                        + Add Task
+                    </button>
+
+                </div>
+
+
+                <!-- IN PROGRESS -->
+
+                <div class="column">
+
+                    <div class="column-header">
+                        <h3>🔄 In Progress</h3>
+                        <span
+                            class="count"
+                            id="progressCount">
+                            0
+                        </span>
+                    </div>
+
+                    <div
+                        class="tasks"
+                        id="progressTasks">
+                    </div>
+
+                    <button
+                        class="add-task-btn"
+                        data-status="in_progress">
+                        + Add Task
+                    </button>
+
+                </div>
+
+
+                <!-- COMPLETED -->
+
+                <div class="column">
+
+                    <div class="column-header">
+                        <h3>✅ Completed</h3>
+                        <span
+                            class="count"
+                            id="completedCount">
+                            0
+                        </span>
+                    </div>
+
+                    <div
+                        class="tasks"
+                        id="completedTasks">
+                    </div>
+
+                    <button
+                        class="add-task-btn"
+                        data-status="completed">
+                        + Add Task
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- CREATE PROJECT MODAL -->
+
+<div
+    class="modal"
+    id="projectModal">
+
+    <div class="modal-box">
+
+        <h2>Create Project</h2>
+
+        <div class="field">
+            <label>Project Name</label>
+            <input
+                type="text"
+                id="projectName"
+                placeholder="e.g. NEXUS Website">
+        </div>
+
+        <div class="field">
+            <label>Description</label>
+            <textarea
+                id="projectDescription"
+                placeholder="Describe your project..."></textarea>
+        </div>
+
+        <div class="field">
+            <label>Status</label>
+
+            <select id="projectStatus">
+                <option value="active">Active</option>
+                <option value="planning">Planning</option>
+                <option value="completed">Completed</option>
+            </select>
+
+        </div>
+
+        <div
+            class="message"
+            id="projectMessage">
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-btn"
+                id="closeProjectModal">
+                Cancel
+            </button>
+
+            <button
+                class="primary-btn"
+                id="saveProject">
+                Create Project
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CREATE TASK MODAL -->
+
+<div
+    class="modal"
+    id="taskModal">
+
+    <div class="modal-box">
+
+        <h2 id="taskModalTitle">Create Task</h2>
+
+        <div class="field">
+
+            <label>Task Title</label>
+
+            <input
+                type="text"
+                id="taskTitle"
+                placeholder="e.g. Build login page">
+
+        </div>
+
+        <div class="field">
+
+            <label>Description</label>
+
+            <textarea
+                id="taskDescription"
+                placeholder="Describe the task..."></textarea>
+
+        </div>
+
+        <div class="field">
+            <label for="taskAssignee">Assignee</label>
+
+            <select id="taskAssignee">
+                <option value="">Unassigned</option>
+            </select>
+        </div>
+
+        <div class="field">
+
+            <label>Status</label>
+
+            <select id="taskStatus">
+
+                <option value="todo">
+                    To Do
+                </option>
+
+                <option value="in_progress">
+                    In Progress
+                </option>
+
+                <option value="completed">
+                    Completed
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label>Priority</label>
+
+            <select id="taskPriority">
+
+                <option value="low">
+                    Low
+                </option>
+
+                <option value="medium" selected>
+                    Medium
+                </option>
+
+                <option value="high">
+                    High
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+            class="message"
+            id="taskMessage">
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-btn"
+                id="closeTaskModal">
+                Cancel
+            </button>
+
+            <button
+                class="primary-btn"
+                id="saveTask">
+                Create Task
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/js/projects.js"></script>
+
+</body>
+</html>
