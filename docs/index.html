@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS — Community &amp; Collaboration</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">N</div>
+                <span>NEXUS</span>
+            </div>
+
+            <div class="workspace">
+                <div class="avatar">S</div>
+                <div class="workspace-info">
+                    <strong>Sadik</strong>
+                    <span>Personal Workspace</span>
+                </div>
+                <button class="workspace-menu" type="button">⌄</button>
+            </div>
+
+            <nav class="navigation">
+                <p class="nav-label">MAIN</p>
+
+                <a href="/index.html" class="nav-item active">
+                    <span>⌂</span> Dashboard
+                </a>
+                <a href="/communities.html" class="nav-item">
+                    <span>◎</span> Communities
+                </a>
+                <a href="/feed.html" class="nav-item">
+                    <span>▤</span> Discussions
+                </a>
+                <a href="/projects.html" class="nav-item">
+                    <span>▣</span> Projects &amp; Tasks
+                </a>
+                <a href="/chat.html" class="nav-item">
+                    <span>◫</span> Messages
+                </a>
+
+                <p class="nav-label">PERSONAL</p>
+
+                <a href="/notifications.html" class="nav-item">
+                    <span>♢</span> Notifications
+                </a>
+                <a href="/profile.html" class="nav-item">
+                    <span>◈</span> My Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="#" class="nav-item">
+                    <span>⚙</span> Settings
+                </a>
+
+                <div class="user-card">
+                    <div class="avatar large">S</div>
+                    <div class="user-info">
+                        <strong>Sadik</strong>
+                        <span>@sadik</span>
+                    </div>
+                    <button class="more-btn" type="button" aria-label="Logout">•••</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+
+                        
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div class="mobile-brand">
+                    <div class="brand-icon">N</div>
+                    <span>NEXUS</span>
+                </div>
+
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input
+                        type="text"
+                        id="globalSearchInput"
+                        placeholder="Search communities, projects, people..."
+                        autocomplete="off"
+                    >
+                    <kbd>Ctrl K</kbd>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+
+                <button
+                    class="icon-btn"
+                    id="mobileSearchButton"
+                    type="button"
+                    aria-label="Focus search"
+                    onclick="document.getElementById('globalSearchInput').focus()"
+                >⌕</button>
+
+                <a
+                    class="icon-btn notification-btn"
+                    href="/notifications.html"
+                    aria-label="Notifications"
+                    title="Open notifications"
+                >
+                    ♢
+                    <span></span>
+                </a>
+
+                <div class="top-avatar">S</div>
+            </header>
+
+            <!-- DASHBOARD CONTENT -->
+            <section class="content">
+
+                <!-- WELCOME -->
+                <div class="welcome">
+                    <div>
+                        <p class="eyebrow" id="dashboardDate">LOADING DATE...</p>
+                        <h1>
+                            Good evening,
+                            <span id="dashboardUserName">User</span>
+                            👋
+                        </h1>
+                        <p>Here's what's happening across your workspace.</p>
+                    </div>
+
+                    <button class="primary-btn" id="dashboardCreateButton" type="button">
+                        + Create
+                    </button>
+                </div>
+
+                <!-- LIVE STATISTICS -->
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">◈</div>
+                        <div>
+                            <span>Projects</span>
+                            <strong id="statProjects">—</strong>
+                            <small>Your collaboration spaces</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue">◎</div>
+                        <div>
+                            <span>Communities</span>
+                            <strong id="statCommunities">—</strong>
+                            <small>Spaces you belong to</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon cyan">▣</div>
+                        <div>
+                            <span>Open Tasks</span>
+                            <strong id="statOpenTasks">—</strong>
+                            <small>Tasks not yet completed</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">♢</div>
+                        <div>
+                            <span>Unread Notifications</span>
+                            <strong id="statUnreadNotifications">—</strong>
+                            <small>Updates to catch up on</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- DASHBOARD GRID -->
+                <div class="dashboard-grid">
+
+                    <!-- RECENT PROJECTS -->
+                    <section class="panel projects-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2>Recent Projects</h2>
+                                <p>Your collaboration spaces</p>
+                            </div>
+                            <a href="/projects.html">View all →</a>
+                        </div>
+
+                        <div class="project-list" id="dashboardProjectList">
+                            <p>Loading projects...</p>
+                        </div>
+                    </section>
+
+                    <!-- QUICK ACCESS -->
+                    <section class="panel activity-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2>Explore NEXUS</h2>
+                                <p>Jump back into your workspace</p>
+                            </div>
+                        </div>
+
+                        <div class="activity-list">
+                            <a class="activity" href="/communities.html">
+                                <div class="activity-avatar">◎</div>
+                                <div>
+                                    <p><strong>Communities</strong></p>
+                                    <span>Discover and join communities</span>
+                                </div>
+                            </a>
+
+                            <a class="activity" href="/feed.html">
+                                <div class="activity-avatar blue">▤</div>
+                                <div>
+                                    <p><strong>Discussions</strong></p>
+                                    <span>Read and share community posts</span>
+                                </div>
+                            </a>
+
+                            <a class="activity" href="/chat.html">
+                                <div class="activity-avatar green">◫</div>
+                                <div>
+                                    <p><strong>Messages</strong></p>
+                                    <span>Continue your conversations</span>
+                                </div>
+                            </a>
+
+                            <a class="activity" href="/notifications.html">
+                                <div class="activity-avatar orange">♢</div>
+                                <div>
+                                    <p><strong>Notifications</strong></p>
+                                    <span>Check updates and mentions</span>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- MY TASKS -->
+                    <section class="panel tasks-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2>My Tasks</h2>
+                                <p>Tasks across your projects</p>
+                            </div>
+                            <a href="/projects.html">View board →</a>
+                        </div>
+
+                        <div class="task-list" id="dashboardTaskList">
+                            <p>Loading tasks...</p>
+                        </div>
+                    </section>
+
+                    <!-- YOUR COMMUNITIES -->
+                    <section class="panel communities-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2>Your Communities</h2>
+                                <p>Spaces you're part of</p>
+                            </div>
+                            <a href="/communities.html" id="exploreCommunities">
+                                Explore →
+                            </a>
+                        </div>
+
+                        <div class="community-grid" id="communityGrid">
+                            <div class="community-loading">
+                                Loading communities...
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/search.js"></script>
+</body>
+
+</html>

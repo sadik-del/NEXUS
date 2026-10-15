@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NEXUS | Community Feed</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0b1120;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 250px;
+
+            background: #0b1120;
+
+            border-right: 1px solid #1e293b;
+
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            height: 85px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 0 18px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #06b6d4
+            );
+
+            font-weight: bold;
+            color: white;
+        }
+
+        .sidebar-brand strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .sidebar-brand span {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 10px;
+        }
+
+        .sidebar-nav {
+            padding: 10px 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 11px 12px;
+
+            margin-bottom: 4px;
+
+            border-radius: 8px;
+
+            color: #94a3b8;
+
+            text-decoration: none;
+
+            font-size: 13px;
+        }
+
+        .nav-link:hover {
+            background: #111c31;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #172554;
+            color: #60a5fa;
+        }
+
+        .nav-link span {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            padding: 16px;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 8px;
+        }
+
+        .sidebar-user strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .sidebar-user span {
+            display: block;
+            margin-top: 3px;
+            color: #22c55e;
+            font-size: 10px;
+        }
+
+        .avatar,
+        .post-avatar,
+        .top-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #06b6d4
+            );
+
+            color: white;
+
+            font-weight: bold;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 13px;
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .main-content {
+            display: block !important;
+
+            min-height: 100vh;
+
+            margin-left: 250px;
+
+            background: #0b1120;
+        }
+
+        /* ==============================
+           TOPBAR
+        ============================== */
+
+        .topbar {
+            height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 32px;
+
+            border-bottom: 1px solid #1e293b;
+
+            background: #0f172a;
+        }
+
+        .page-title span {
+            display: block;
+
+            color: #f8fafc;
+
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .page-title small {
+            display: block;
+
+            margin-top: 4px;
+
+            color: #64748b;
+
+            font-size: 11px;
+        }
+
+        .top-avatar {
+            width: 38px;
+            height: 38px;
+
+            font-size: 13px;
+        }
+
+        /* ==============================
+           FEED CONTENT
+        ============================== */
+
+        .feed-content {
+            display: block !important;
+
+            width: 100%;
+
+            max-width: 850px;
+
+            margin: 0 auto;
+
+            padding: 32px;
+        }
+
+        .feed-heading {
+            margin-bottom: 24px;
+        }
+
+        .feed-heading h1 {
+            margin: 0;
+
+            font-size: 27px;
+
+            color: #f8fafc;
+        }
+
+        .feed-heading p {
+            margin: 7px 0 0;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        /* ==============================
+           CREATE POST
+        ============================== */
+
+        .create-post-card {
+            display: block;
+
+            padding: 20px;
+
+            margin-bottom: 22px;
+
+            background: #111827;
+
+            border: 1px solid #1e293b;
+
+            border-radius: 15px;
+        }
+
+        .create-post-user {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 15px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+
+            font-size: 13px;
+        }
+
+        .create-post-user strong {
+            display: block;
+
+            color: #e2e8f0;
+
+            font-size: 13px;
+        }
+
+        .create-post-user span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 10px;
+        }
+
+        #postContent {
+            display: block;
+
+            width: 100%;
+
+            min-height: 105px;
+
+            padding: 13px;
+
+            resize: vertical;
+
+            border: 1px solid #263244;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #0b1120;
+
+            color: #e2e8f0;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 13px;
+        }
+
+        #postContent:focus {
+            border-color: #3b82f6;
+        }
+
+        #postContent::placeholder {
+            color: #64748b;
+        }
+
+        .create-post-bottom {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 12px;
+
+            margin-top: 12px;
+        }
+
+        #postCommunity {
+            height: 40px;
+
+            min-width: 220px;
+
+            padding: 0 12px;
+
+            border: 1px solid #263244;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background: #0b1120;
+
+            color: #cbd5e1;
+
+            font-size: 12px;
+        }
+
+        .primary-btn {
+            height: 40px;
+
+            padding: 0 18px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .primary-btn:hover {
+            background: #3b82f6;
+        }
+
+        .primary-btn:disabled {
+            opacity: .6;
+
+            cursor: not-allowed;
+        }
+
+        .post-message {
+            min-height: 18px;
+
+            margin-top: 10px;
+
+            font-size: 11px;
+        }
+
+        .post-message.success {
+            color: #4ade80;
+        }
+
+        .post-message.error {
+            color: #f87171;
+        }
+
+        /* ==============================
+           POSTS
+        ============================== */
+
+        .posts-container {
+            display: block;
+        }
+
+        .post-card {
+            display: block;
+
+            padding: 20px;
+
+            margin-bottom: 16px;
+
+            background: #111827;
+
+            border: 1px solid #1e293b;
+
+            border-radius: 15px;
+        }
+
+        .post-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .post-author {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .post-author-info strong {
+            display: block;
+
+            color: #e2e8f0;
+
+            font-size: 13px;
+        }
+
+        .post-author-info span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 10px;
+        }
+
+        .post-community {
+            color: #60a5fa !important;
+        }
+
+        .post-delete {
+            border: 0;
+
+            background: transparent;
+
+            color: #64748b;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+        .post-delete:hover {
+            color: #f87171;
+        }
+
+        .post-content {
+            margin: 18px 0;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+            white-space: pre-wrap;
+
+            word-break: break-word;
+        }
+
+        .post-actions {
+            display: flex;
+
+            gap: 8px;
+
+            padding-top: 13px;
+
+            border-top: 1px solid #1e293b;
+        }
+
+        .post-action {
+            height: 34px;
+
+            padding: 0 12px;
+
+            border: 0;
+
+            border-radius: 7px;
+
+            background: transparent;
+
+            color: #64748b;
+
+            cursor: pointer;
+
+            font-size: 11px;
+        }
+
+        .post-action:hover {
+            background: #172033;
+
+            color: #cbd5e1;
+        }
+
+        .post-action.liked {
+            color: #60a5fa;
+        }
+
+        .comment-box {
+            display: none;
+
+            gap: 8px;
+
+            margin-top: 12px;
+        }
+
+        .comment-box.active {
+            display: flex;
+        }
+
+        .comment-box input {
+            flex: 1;
+
+            height: 36px;
+
+            padding: 0 11px;
+
+            border: 1px solid #263244;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background: #0b1120;
+
+            color: #e2e8f0;
+        }
+
+        .comment-box button {
+            height: 36px;
+
+            padding: 0 13px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            cursor: pointer;
+        }
+
+        .feed-loading,
+        .feed-empty {
+            display: block;
+
+            padding: 50px 20px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            background: #111827;
+
+            border: 1px solid #1e293b;
+
+            border-radius: 15px;
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-brand {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .sidebar-brand > div:last-child {
+                display: none;
+            }
+
+            .sidebar-nav {
+                padding: 10px 7px;
+            }
+
+            .nav-link {
+                justify-content: center;
+
+                font-size: 0;
+            }
+
+            .sidebar-user {
+                justify-content: center;
+            }
+
+            .sidebar-user > div:last-child {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .feed-content {
+                padding: 20px 14px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .create-post-bottom {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #postCommunity,
+            .primary-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     SIDEBAR
+============================== -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-logo">
+            N
+        </div>
+
+        <div>
+            <strong>NEXUS</strong>
+            <span>Community Platform</span>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="/" class="nav-link">
+            <span>⌂</span>
+            Dashboard
+        </a>
+
+        <a href="/feed.html" class="nav-link active">
+            <span>◈</span>
+            Feed
+        </a>
+
+        <a href="/communities.html" class="nav-link">
+            <span>◉</span>
+            Communities
+        </a>
+
+        <a href="/projects.html" class="nav-link">
+            <span>▣</span>
+            Projects
+        </a>
+
+        <a href="/projects.html" class="nav-link">
+            <span>✓</span>
+            Tasks
+        </a>
+
+        <a href="/chat.html" class="nav-link">
+            <span>▤</span>
+            Messages
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-user">
+
+            <div
+                class="avatar"
+                id="sidebarAvatar"
+            >
+                U
+            </div>
+
+            <div>
+
+                <strong id="sidebarName">
+                    User
+                </strong>
+
+                <span>
+                    Online
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ==============================
+     MAIN
+============================== -->
+
+<main class="main-content">
+
+
+    <header class="topbar">
+
+        <div class="page-title">
+
+            <span>
+                Community Feed
+            </span>
+
+            <small>
+                What's happening across NEXUS
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <div
+                class="top-avatar"
+                id="topAvatar"
+            >
+                U
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="feed-content">
+
+
+        <div class="feed-heading">
+
+            <h1>
+                Community Feed
+            </h1>
+
+            <p>
+                Share ideas, updates and conversations.
+            </p>
+
+        </div>
+
+
+        <!-- CREATE POST -->
+
+        <section class="create-post-card">
+
+            <div class="create-post-user">
+
+                <div
+                    class="post-avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+                <div>
+
+                    <strong id="userName">
+                        User
+                    </strong>
+
+                    <span>
+                        Create a new post
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <textarea
+                id="postContent"
+                placeholder="What's on your mind?"
+                maxlength="2000"
+            ></textarea>
+
+
+            <div class="create-post-bottom">
+
+                <select id="postCommunity">
+
+                    <option value="">
+                        Loading communities...
+                    </option>
+
+                </select>
+
+
+                <button
+                    class="primary-btn"
+                    id="createPostBtn"
+                >
+                    Publish Post
+                </button>
+
+            </div>
+
+
+            <div
+                class="post-message"
+                id="postMessage"
+            ></div>
+
+        </section>
+
+
+        <!-- POSTS -->
+
+        <div
+            class="posts-container"
+            id="postsContainer"
+        >
+
+            <div class="feed-loading">
+                Loading posts...
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<script src="/js/feed.js"></script>
+
+</body>
+
+</html>
