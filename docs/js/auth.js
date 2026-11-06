@@ -95,7 +95,7 @@ document
 
             // Redirect
             setTimeout(() => {
-                window.location.href = "index.html";
+                window.location.href = "/";
             }, 800);
 
         } catch (error) {
@@ -169,7 +169,7 @@ document
 
             // Redirect to dashboard
             setTimeout(() => {
-                window.location.href = "index.html";
+                window.location.href = "/";
             }, 500);
 
         } catch (error) {
